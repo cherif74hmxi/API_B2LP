@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
-use App\Http\Controllers\{UserController};
+
+use App\Http\Controllers\UserController;
 use App\Models\User;
 
 /*

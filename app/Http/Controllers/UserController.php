@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResource;
+
 
 class UserController extends Controller
 {
@@ -38,6 +40,7 @@ class UserController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
+
     }
 
     /**
