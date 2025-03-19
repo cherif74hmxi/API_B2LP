@@ -20,4 +20,10 @@ class Billet extends Model
 		'created_at',
 		'updated_at'
 	];
+
+    public function commentaires()
+	{
+		return $this->hasMany(Commentaire::class);
+	}
+
 }

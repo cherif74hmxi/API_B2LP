@@ -48,10 +48,19 @@ class BilletController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Billet $billet)
+    public function show($id)
     {
         //
+        try {
+            return new BilletResource(Billet::with('commentaires')->findOrFail($id));
+        }
+        catch(\Illuminate\Database\QueryException $e) {
+            Log::error('Erreur accès base de données');
+            return response()->json([
+                'message' => 'Ressource indisponible.'], 500);
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.

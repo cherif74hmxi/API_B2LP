@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/user/logout', function(Request $request) {
 		auth()->user()->tokens()->delete();
 	});
+	Route::get('/billets/{id}', [BilletController::class, "show"])->whereNumber('id');
 });
 
 /*
