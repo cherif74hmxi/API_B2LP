@@ -14,4 +14,11 @@ class Billet extends Model
         'BIL_TITRE',
         'BIL_CONTENU',
     ];
+
+    protected $hidden = [
+		'id',
+		'created_at',
+		'updated_at'
+	];
+
 }
