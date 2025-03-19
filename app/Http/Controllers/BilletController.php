@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BilletResource;
+use App\Http\Resources\{BilletsResource,BilletResource};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +19,8 @@ class BilletController extends Controller
         //
         try {
             //Le résultat de la requête est retourné directement en JSON
-            return Billet::all();
+            //return Billet::all();
+            return BilletsResource::collection(Billet::all());
         }
         catch(\Illuminate\Database\QueryException $e) {
             Log::channel('projectLog')->error('Erreur accès base de données');
