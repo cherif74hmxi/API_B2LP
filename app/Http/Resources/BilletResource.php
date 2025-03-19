@@ -21,6 +21,5 @@ class BilletResource extends JsonResource
             'Contenu' => $this->BIL_CONTENU,
             'Commentaires' => CommentaireResource::collection($this->commentaires),
         ];
-
     }
 }

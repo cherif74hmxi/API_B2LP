@@ -16,7 +16,6 @@ class BilletController extends Controller
      */
     public function index()
     {
-        //
         try {
             //Le résultat de la requête est retourné directement en JSON
             //return Billet::all();
