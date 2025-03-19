@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\{UserController,BilletController};
 use App\Models\User;
 
 /*
@@ -61,3 +61,13 @@ Route::post('/login', function(Request $request) {
 			'message' => 'Ressource indisponible.'], 500);
 	}
 });
+
+/*
+|--------------------------------------------------------------------------
+|api/billets
+|list blog posts.
+|--------------------------------------------------------------------------
+|
+*/ 
+Route::get('/billets', [BilletController::class, "index"]);
+

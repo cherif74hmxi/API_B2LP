@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBilletRequest;
-use App\Http\Requests\UpdateBilletRequest;
+use App\Http\Resources\BilletResource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\Billet;
 
 class BilletController extends Controller
@@ -14,6 +17,16 @@ class BilletController extends Controller
     public function index()
     {
         //
+        try {
+            //Le résultat de la requête est retourné directement en JSON
+            return Billet::all();
+        }
+        catch(\Illuminate\Database\QueryException $e) {
+            Log::channel('projectLog')->error('Erreur accès base de données');
+            return response()->json([
+                'message' => 'Ressource indisponible.'], 500);
+        }
+
     }
 
     /**
