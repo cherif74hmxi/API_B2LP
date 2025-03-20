@@ -11,8 +11,14 @@ class Commentaire extends Model
     use HasFactory;
     protected $fillable = [
         'COM_DATE',
-        'COM_AUTEUR',
         'COM_CONTENU',
         'billet_id',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

@@ -17,7 +17,7 @@ class CommentaireResource extends JsonResource
         //return parent::toArray($request);
         return [
             'Date' => $this->COM_DATE,
-            'Auteur' => $this->COM_AUTEUR,
+            'Auteur' => $this->user->name,
             'Contenu' => $this->COM_CONTENU,
         ];
     }

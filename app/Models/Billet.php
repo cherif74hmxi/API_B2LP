@@ -26,4 +26,8 @@ class Billet extends Model
 		return $this->hasMany(Commentaire::class);
 	}
 
+    public function users(): HasManyThrough
+    {
+        return $this->through('commentaires')->has('user');
+    }
 }
