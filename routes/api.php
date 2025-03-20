@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function() {
 		auth()->user()->tokens()->delete();
 	});
 	Route::get('/billets/{id}', [BilletController::class, "show"])->whereNumber('id');
+	Route::post('/commentaires',[CommentaireController::class,"store"]);
 });
 
 /*

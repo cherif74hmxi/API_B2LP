@@ -11,7 +11,7 @@ class StoreCommentaireRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,19 @@ class StoreCommentaireRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'COM_DATE' => ['required','date'],
+            'COM_AUTEUR' => ['required','string','max:100'],
+            'COM_CONTENU'=> ['required','string','max:200'],
+            'billet_id' => ['required','integer']
         ];
     }
+
+    public function failedValidation(Validator $validator){
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'data' =>$validator->errors()
+        ]));
+    }
+
 }

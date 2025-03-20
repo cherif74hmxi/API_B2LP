@@ -30,6 +30,17 @@ class CommentaireController extends Controller
     public function store(StoreCommentaireRequest $request)
     {
         //
+        try {
+            $commentaire = Commentaire::create($request->validated());
+            return response()->json($commentaire,201);
+        }
+        catch(\Illuminate\Database\QueryException $e){
+            Log::channel('projectError')->error('Erreur accès base de données');
+            return response()->json([
+                'message' => 'Ressource indiponible.'
+            ],500);
+        }
+
     }
 
     /**

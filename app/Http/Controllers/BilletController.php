@@ -52,13 +52,14 @@ class BilletController extends Controller
     {
         //
         try {
-            return new BilletResource(Billet::with('commentaires')->findOrFail($id));
+            $billet = Billet::with('commentaires')->findOrFail($id);
         }
         catch(\Illuminate\Database\QueryException $e) {
-            Log::error('Erreur accès base de données');
+            Log::channel('projectLog')->error('Erreur accès base de données');
             return response()->json([
                 'message' => 'Ressource indisponible.'], 500);
         }
+        return new BilletResource($billet);
     }
 
 
