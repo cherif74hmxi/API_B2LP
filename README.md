@@ -28,7 +28,7 @@ Mise à jour  _Mars 2025_.
     * faire `php artisan db:seed --class=BilletSeeder`,
     * faire `php artisan db:seed --class=CommentaireSeeder`.
 
-_Pour la mise en production :_
+_- Pour la mise en production_ :
     * Créer un user avec des droits CRUD uniquement,
     * [suivre les instructions de laravel.](https://laravel.com/docs/11.x/deployment)
     
