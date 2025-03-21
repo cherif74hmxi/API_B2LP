@@ -5,6 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+
 
 class StoreCommentaireRequest extends FormRequest
 {
@@ -27,7 +30,13 @@ class StoreCommentaireRequest extends FormRequest
             'COM_DATE' => ['required','date'],
             'COM_CONTENU'=> ['required','string','max:200'],
             'billet_id' => ['required','integer'],
-            'user_id' => ['required','integer']
+            'user_id' => [
+                'required',
+                'integer',
+                Rule::exists('users', 'id')->where(function ($query) {
+                    $query->where('id', Auth::id());
+                })
+            ]
         ];
     }
 
