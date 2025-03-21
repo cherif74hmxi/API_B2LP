@@ -1,10 +1,10 @@
 ![Logo LyonPalme](logo_lp.png)
 
-# Application Sondage "**Palmoodle**"
+# Application blog de Lyon Palme "**B2LP**"
 
-Code du webservice développé avec Laravel. Ce webservice sera interrogé par l'application client leger "**palmoodle**" développée avec VueJS.
+Code du webservice développé avec Laravel. Ce webservice sera interrogé par l'application client leger "**b2LP**" développée avec ReactNative.
 
-Mise à jour  _Mars 2024_.
+Mise à jour  _Mars 2025_.
 
 ### 1. Programmation.
 
@@ -25,10 +25,8 @@ Mise à jour  _Mars 2024_.
     * faire `Artisan: migrate`.
 - Pour peupler la db :
     * créer des users avec l'api : voir endpoint ci-dessous,
-    * faire `php artisan db:seed --class=SondageSeeder`,
-    * faire `php artisan db:seed --class=QuestionSeeder`,
-    * faire `php artisan db:seed --class=SelectionSeeder`,
-    * faire `php artisan db:seed --class=VoteSeeder`.
+    * faire `php artisan db:seed --class=BilletSeeder`,
+    * faire `php artisan db:seed --class=CommentaireSeeder`.
 
 ### 3. API Endpoints.
 
@@ -83,85 +81,45 @@ Mise à jour  _Mars 2024_.
     - `nom`,
     - `email`.
 
-#### Application Sondage : consultation
+#### Application Blog : consultation des billets.
 
 | **Nom** | **Méthode** | **Url** | **Response Code** |
 | ------- | ----------- | ------- | ----------------- | 
-| Sondages | `GET` | _api/sondages_ | `200`, `500` |
+| Billets | `GET` | _api/billets_ | `200`, `500` |
 
-**Listing de tous les sondages**. Affichage réduit : titre, date, description, auteur.
+**Listing de tous les billets**. Affichage réduit : titre, date, contenu.
 _Pas d'authentification requise_.
 
 - Data Received
     - `None`.
 - Data Send
-    - `sondage complet` (array) : le sondage et ses détails (y compris les votes).
+    - `billets complet` (array) : les billets.
 
 | **Nom** | **Méthode** | **Url** | **Response Code** |
 | ------- | ----------- | ------- | ----------------- | 
-| SondageById | `GET` | _api/sondages/{id}_ | `200`, `500`|
+| BilletById | `GET` | _api/billets/{id}_ | `200`, `500`|
 
-**Affiche le détail du sondage d'id {id} avec les votes**.
+**Affiche le détail d'un billet d'id {id}**.
 
 - Data Received
     - `auth_token` (cookie) : Bearer Token pour l'authentification.
     - `{id}`
 - Data Send
-    - `sondage + vote` (array) : Le détail du sondage sélectionné. 
+    - `billet` (array) : Le détail du billet sélectionné avec ses commentaires et les noms des auteurs des commentaires. 
 
-#### Application Sondage : insertion en base.
+#### Application Blog : insertion en base.
 
 | **Nom** | **Méthode** | **Url** | **Response Code** |
 | ------- | ----------- | ------- | ----------------- | 
-| Sondage | `POST` | _api/sondage_ | `201`, `500` |
+|  | `POST` | _api/commentaires_ | `201`, `500` |
 
-**Insertion d'un sondage dans la base de données**.
+**Insertion d'un commentaire dans la base de données**.
 
 - Data Received
     - `auth_token` (cookie) : Bearer Token pour l'authentification.
-    - `titre` : titre du sondage,
     - `date` : date de création,
-    - `description` : message de l'auteur,
-    - `user_id` : id de l'auteur du sondage.
-- Data Send
-    - `success` : code 201.
-
-| **Nom** | **Méthode** | **Url** | **Response Code** |
-| ------- | ----------- | ------- | ----------------- | 
-| Question | `POST` | _api/question_ | `201`, `500` |
-
-**Insertion d'une question d'un sondage dans la base de données**.
-
-- Data Received
-    - `auth_token` (cookie) : Bearer Token pour l'authentification.
-    - `libellé` : le libellé de la question,
-    - `sondage_id` : id du sondage auquel appartient la question.
-- Data Send
-    - `success` : code 201.
-
-| **Nom** | **Méthode** | **Url** | **Response Code** |
-| ------- | ----------- | ------- | ----------------- | 
-| Selection | `POST` | _api/selection_ | `201`, `500` |
-
-**Insertion d'un item (sélection) d'une question dans la base de données**.
-
-- Data Received
-    - `auth_token` (cookie) : Bearer Token pour l'authentification.
-    - `libellé` : le libellé de la sélection (item),
-    - `question_id` : id de la question auquelle appartient la sélection.
-- Data Send
-    - `success` : code 201.
-
-| **Nom** | **Méthode** | **Url** | **Response Code** |
-| ------- | ----------- | ------- | ----------------- | 
-| Vote | `POST` | _api/vote_ | `201`, `500` |
-
-**Insertion d'un vote sur un sondage dans la base de données**.
-
-- Data Received
-    - `auth_token` (cookie) : Bearer Token pour l'authentification.
-    - `date` : la date du vote,
-    - `selection_id` : id de la sélection (item) choisie par le votant.
-    - `user_id` : l'id du votant.
+    - `contenu` : message de l'auteur,
+    - `billet_id` : id du billet auquel correspond le commentaire,
+    - `user_id` : id de l'auteur du commentaire.
 - Data Send
     - `success` : code 201.
