@@ -30,7 +30,7 @@ Mise à jour  _Mars 2025_.
 
 _Pour la mise en production :_
     * Créer un user avec des droits CRUD uniquement,
-    * [suivre les instructions de laravel :](https://laravel.com/docs/11.x/deployment)
+    * [suivre les instructions de laravel.](https://laravel.com/docs/11.x/deployment)
     
 
 ### 3. API Endpoints.
