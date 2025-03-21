@@ -21,13 +21,10 @@ class Billet extends Model
 		'updated_at'
 	];
 
+    //Un billet a plusieurs commentaires.
+    //Cette fonction sera utile pour afficher les commentaires d'un billet sélectionné.
     public function commentaires()
 	{
 		return $this->hasMany(Commentaire::class);
 	}
-
-    public function users(): HasManyThrough
-    {
-        return $this->through('commentaires')->has('user');
-    }
 }
