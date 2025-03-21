@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreCommentaireRequest extends FormRequest
 {
@@ -23,9 +25,9 @@ class StoreCommentaireRequest extends FormRequest
     {
         return [
             'COM_DATE' => ['required','date'],
-            'COM_AUTEUR' => ['required','string','max:100'],
             'COM_CONTENU'=> ['required','string','max:200'],
-            'billet_id' => ['required','integer']
+            'billet_id' => ['required','integer'],
+            'user_id' => ['required','integer']
         ];
     }
 
@@ -36,5 +38,4 @@ class StoreCommentaireRequest extends FormRequest
             'data' =>$validator->errors()
         ]));
     }
-
 }

@@ -40,7 +40,6 @@ class CommentaireController extends Controller
                 'message' => 'Ressource indiponible.'
             ],500);
         }
-
     }
 
     /**
