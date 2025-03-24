@@ -16,6 +16,7 @@ Mise à jour  _Mars 2025_.
 
 - Créer la base de données et le user sur Mariadb,
 - Cloner le projet dans websites/laravel,
+- Donner les droits aux répertoires _boostrap/cache_ et _storage_,
 - Dupliquer le fichier _.env.example_, le renommer _.env_,
 - Paramétrer l'accès à la db,
 - Faire `composer install`,
@@ -28,7 +29,7 @@ Mise à jour  _Mars 2025_.
     * faire `php artisan db:seed --class=BilletSeeder`,
     * faire `php artisan db:seed --class=CommentaireSeeder`.
 
-_- Pour la mise en production_ :
+- _Pour la mise en production_ :
     * Créer un user avec des droits CRUD uniquement,
     * [suivre les instructions de laravel.](https://laravel.com/docs/11.x/deployment)
     
