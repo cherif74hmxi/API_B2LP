@@ -27,6 +27,7 @@ Mise à jour  _Mars 2025_.
 - Pour peupler la db :
     * créer des users avec l'api : voir endpoint ci-dessous,
     * faire `php artisan db:seed --class=BilletSeeder`,
+    * faire `php artisan db:seed --class=UserSeeder`,
     * faire `php artisan db:seed --class=CommentaireSeeder`.
 
 - _Pour la mise en production_ :
