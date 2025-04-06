@@ -19,7 +19,7 @@ class BilletController extends Controller
         try {
             //Le résultat de la requête est retourné directement en JSON
             //return Billet::all();
-            return BilletsResource::collection(Billet::all());
+            return response()->json(BilletsResource::collection(Billet::all()));
         }
         catch(\Illuminate\Database\QueryException $e) {
             Log::channel('projectLog')->error('Erreur accès base de données');
