@@ -4,23 +4,6 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/composer:1": {}
-  },
-  "postStartCommand": "if [ ! -f .env ]; then cp .env.example .env; fi && composer install --no-interaction --prefer-dist || true && npm ci || true && php artisan key:generate || true",
-  "forwardPorts": [8000, 5173],
-  "portsAttributes": {
-    "8000": { "label": "Laravel", "onAutoForward": "notify" },
-    "5173": { "label": "Vite", "onAutoForward": "notify" }
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "bmewburn.vscode-intelephense-client",
-        "onecentlin.laravel-blade",
-        "amiralizadeh9480.laravel-extra-intellisense",
-        "ryannaddy.laravel-artisan"
-      ]
     }
   }
 }
