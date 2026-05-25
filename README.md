@@ -130,3 +130,62 @@ _Pas d'authentification requise_.
     - `user_id` : id de l'auteur du commentaire.
 - Data Send
     - `success` : code 201.
+ 
+
+#### Application Blog : administration des billets et commentaires.
+
+Ces endpoints nécessitent une authentification par Bearer Token avec Sanctum.
+Ils sont réservés aux utilisateurs dont le rôle est `admin`.
+
+| **Nom** | **Méthode** | **Url** | **Response Code** |
+| ------- | ----------- | ------- | ----------------- |
+| BilletCreate | `POST` | _api/billets_ | `201`, `401`, `403`, `422`, `500` |
+
+**Création d'un billet**.
+
+- Data Received
+    - `auth_token` (Bearer Token) : token de l'administrateur connecté,
+    - `BIL_DATE` (date) : date du billet,
+    - `BIL_TITRE` (string) : titre du billet,
+    - `BIL_CONTENU` (string) : contenu du billet.
+- Data Send
+    - `billet` (array) : le billet créé.
+
+| **Nom** | **Méthode** | **Url** | **Response Code** |
+| ------- | ----------- | ------- | ----------------- |
+| BilletUpdate | `PATCH` | _api/billets/{billet}_ | `200`, `401`, `403`, `404`, `422`, `500` |
+
+**Modification d'un billet**.
+
+- Data Received
+    - `auth_token` (Bearer Token) : token de l'administrateur connecté,
+    - `{billet}` : id du billet à modifier,
+    - `BIL_DATE` (date) : nouvelle date du billet,
+    - `BIL_TITRE` (string) : nouveau titre du billet,
+    - `BIL_CONTENU` (string) : nouveau contenu du billet.
+- Data Send
+    - `billet` (array) : le billet modifié.
+
+| **Nom** | **Méthode** | **Url** | **Response Code** |
+| ------- | ----------- | ------- | ----------------- |
+| BilletDelete | `DELETE` | _api/billets/{billet}_ | `204`, `401`, `403`, `404`, `500` |
+
+**Suppression d'un billet**.
+
+- Data Received
+    - `auth_token` (Bearer Token) : token de l'administrateur connecté,
+    - `{billet}` : id du billet à supprimer.
+- Data Send
+    - `None`.
+
+| **Nom** | **Méthode** | **Url** | **Response Code** |
+| ------- | ----------- | ------- | ----------------- |
+| CommentaireDelete | `DELETE` | _api/commentaires/{commentaire}_ | `204`, `401`, `403`, `404`, `500` |
+
+**Suppression d'un commentaire**.
+
+- Data Received
+    - `auth_token` (Bearer Token) : token de l'administrateur connecté,
+    - `{commentaire}` : id du commentaire à supprimer.
+- Data Send
+    - `None`.
