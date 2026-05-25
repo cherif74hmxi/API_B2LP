@@ -14,8 +14,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            BilletSeeder::class,
-            CommentaireSeeder::class,
         ]);
+
+        if (app()->environment('local')) {
+            $this->call([
+                BilletSeeder::class,
+                CommentaireSeeder::class,
+            ]);
+        }
     }
 }
