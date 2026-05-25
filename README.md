@@ -41,7 +41,7 @@ git pull origin main
 composer install --no-dev --optimize-autoloader
 php artisan migrate:fresh --seed --force
 php artisan config:cache
-php artisan route:cache
+php artisan route:clear
 ```
 
 `migrate:fresh --seed` supprime les tables existantes, les recrée, puis relance les seeders. Cette commande est adaptée tant que la base du VPS ne contient pas encore de vraies données à conserver.

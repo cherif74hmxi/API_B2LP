@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreBilletRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreBilletRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->isAdmin() === true;
     }
 
     /**
@@ -22,7 +24,18 @@ class StoreBilletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'BIL_DATE' => ['required','date'],
+            'BIL_TITRE'=> ['required','string','max:100'],
+            'BIL_CONTENU' => ['required','string', 'max:200'],
         ];
+    }
+
+    public function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'data' =>$validator->errors()
+        ], 422));
     }
 }

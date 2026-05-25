@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\{BilletsResource,BilletResource};
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-
+use App\Http\Requests\StoreBilletRequest;
+use App\Http\Requests\UpdateBilletRequest;
+use App\Http\Resources\{BilletResource, BilletsResource};
 use App\Models\Billet;
+use Illuminate\Support\Facades\Log;
 
 class BilletController extends Controller
 {
@@ -34,7 +33,7 @@ class BilletController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -42,7 +41,9 @@ class BilletController extends Controller
      */
     public function store(StoreBilletRequest $request)
     {
-        //
+        $billet = Billet::create($request->validated());
+
+        return response()->json($billet, 201);
     }
 
     /**
@@ -76,7 +77,9 @@ class BilletController extends Controller
      */
     public function update(UpdateBilletRequest $request, Billet $billet)
     {
-        //
+        $billet->update($request->validated());
+
+        return response()->json($billet);
     }
 
     /**
@@ -84,6 +87,10 @@ class BilletController extends Controller
      */
     public function destroy(Billet $billet)
     {
-        //
+        $this->authorize('delete', $billet);
+
+        $billet->delete();
+
+        return response()->json(null, 204);
     }
 }

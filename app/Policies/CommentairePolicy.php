@@ -45,7 +45,7 @@ class CommentairePolicy
      */
     public function delete(User $user, Commentaire $commentaire): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**

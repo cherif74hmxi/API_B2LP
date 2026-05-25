@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\{UserController,BilletController,CommentaireController};
 use App\Models\User;
@@ -19,13 +21,20 @@ use App\Models\User;
 */
 
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'show']);
-    Route::post('/user/logout', function(Request $request) {
-		auth()->user()->tokens()->delete();
-	});
-	Route::get('/billets/{id}', [BilletController::class, "show"])->whereNumber('id');
-	Route::post('/commentaires',[CommentaireController::class,"store"]);
+    Route::post('/user/logout', function (Request $request) {
+        auth()->user()->tokens()->delete();
+    });
+
+    Route::get('/billets/{id}', [BilletController::class, 'show'])->whereNumber('id');
+    Route::post('/commentaires', [CommentaireController::class, 'store']);
+
+    Route::post('/billets', [BilletController::class, 'store']);
+    Route::patch('/billets/{billet}', [BilletController::class, 'update'])->whereNumber('billet');
+    Route::delete('/billets/{billet}', [BilletController::class, 'destroy'])->whereNumber('billet');
+
+    Route::delete('/commentaires/{commentaire}', [CommentaireController::class, 'destroy'])->whereNumber('commentaire');
 });
 
 /*
@@ -72,4 +81,3 @@ Route::post('/login', function(Request $request) {
 |
 */ 
 Route::get('/billets', [BilletController::class, "index"]);
-

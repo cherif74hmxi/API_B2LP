@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCommentaireRequest;
 use App\Http\Requests\UpdateCommentaireRequest;
 use App\Models\Commentaire;
+use Illuminate\Support\Facades\Log;
 
 class CommentaireController extends Controller
 {
@@ -35,7 +36,7 @@ class CommentaireController extends Controller
             return response()->json($commentaire,201);
         }
         catch(\Illuminate\Database\QueryException $e){
-            Log::channel('projectError')->error('Erreur accès base de données');
+            Log::channel('projectLog')->error('Erreur accès base de données');
             return response()->json([
                 'message' => 'Ressource indiponible.'
             ],500);
@@ -71,6 +72,10 @@ class CommentaireController extends Controller
      */
     public function destroy(Commentaire $commentaire)
     {
-        //
+        $this->authorize('delete', $commentaire);
+
+        $commentaire->delete();
+
+        return response()->json(null, 204);
     }
 }
