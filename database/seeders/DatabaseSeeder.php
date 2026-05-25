@@ -14,13 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            BilletSeeder::class,
+            CommentaireSeeder::class,
         ]);
-
-        if (app()->environment('local') && class_exists(\Faker\Factory::class)) {
-            $this->call([
-                BilletSeeder::class,
-                CommentaireSeeder::class,
-            ]);
-        }
     }
 }

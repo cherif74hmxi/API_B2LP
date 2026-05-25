@@ -38,7 +38,7 @@ Depuis le VPS, se placer dans le dossier du projet puis récupérer la dernière
 ```bash
 cd /chemin/du/projet
 git pull origin main
-composer install --no-dev --optimize-autoloader
+composer install --optimize-autoloader
 php artisan migrate:fresh --seed --force
 php artisan config:cache
 php artisan route:clear
