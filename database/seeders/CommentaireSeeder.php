@@ -2,17 +2,28 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\Billet;
 use App\Models\Commentaire;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class CommentaireSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Commentaire::factory(10)->create();
+        $billetIds = Billet::query()->pluck('id');
+        $swimmerIds = User::whereHas('role', fn ($query) => $query->where('slug', Role::SWIMMER))->pluck('id');
+
+        if ($billetIds->isEmpty() || $swimmerIds->isEmpty()) {
+            return;
+        }
+
+        foreach (range(1, 10) as $index) {
+            Commentaire::factory()->create([
+                'billet_id' => $billetIds->random(),
+                'user_id' => $swimmerIds->random(),
+            ]);
+        }
     }
 }

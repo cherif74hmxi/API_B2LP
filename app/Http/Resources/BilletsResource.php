@@ -14,11 +14,12 @@ class BilletsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //return parent::toArray($request);
         return [
-            'Date' => $this->BIL_DATE,
+            'id' => $this->getKey(),
+            'Date' => $this->BIL_DATE?->toDateString(),
             'Titre' => $this->BIL_TITRE,
             'Contenu' => $this->BIL_CONTENU,
+            'Auteur' => $this->whenLoaded('user', fn () => $this->user?->name),
         ];
     }
 }

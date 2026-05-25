@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +18,10 @@ class BilletFactory extends Factory
     public function definition(): array
     {
         return [
-            'BIL_DATE' => now(),
+            'BIL_DATE' => now()->toDateString(),
             'BIL_TITRE' => fake()->text(50),
             'BIL_CONTENU' => fake()->text(200),
+            'user_id' => User::factory()->admin(),
         ];
     }
 }

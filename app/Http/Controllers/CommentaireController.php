@@ -3,74 +3,79 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentaireRequest;
-use App\Http\Requests\UpdateCommentaireRequest;
+use App\Http\Resources\CommentaireResource;
+use App\Models\Billet;
 use App\Models\Commentaire;
+use App\Support\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class CommentaireController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    use ApiResponse;
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Billet $billet): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCommentaireRequest $request)
-    {
-        //
         try {
-            $commentaire = Commentaire::create($request->validated());
-            return response()->json($commentaire,201);
+            $commentaires = $billet->commentaires()
+                ->with('user.role')
+                ->orderBy('COM_DATE')
+                ->orderBy('id')
+                ->get();
+
+            return $this->successResponse(
+                CommentaireResource::collection($commentaires),
+                'Liste des commentaires.'
+            );
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::channel('projectLog')->error('Erreur acces base de donnees', [
+                'exception' => $e->getMessage(),
+            ]);
+
+            return $this->errorResponse('Ressource indisponible.', 500);
         }
-        catch(\Illuminate\Database\QueryException $e){
-            Log::channel('projectError')->error('Erreur accès base de données');
-            return response()->json([
-                'message' => 'Ressource indiponible.'
-            ],500);
+    }
+
+    public function store(StoreCommentaireRequest $request, ?Billet $billet = null): JsonResponse
+    {
+        try {
+            $data = $request->validated();
+
+            $commentaire = Commentaire::create([
+                'COM_DATE' => $data['COM_DATE'],
+                'COM_CONTENU' => $data['COM_CONTENU'],
+                'billet_id' => $billet?->getKey() ?? $data['billet_id'],
+                'user_id' => $request->user()->getKey(),
+            ]);
+
+            $commentaire->load('user.role');
+
+            return $this->successResponse(
+                new CommentaireResource($commentaire),
+                'Commentaire ajoute avec succes.',
+                201
+            );
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::channel('projectLog')->error('Erreur acces base de donnees', [
+                'exception' => $e->getMessage(),
+            ]);
+
+            return $this->errorResponse('Ressource indisponible.', 500);
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Commentaire $commentaire)
+    public function destroy(Commentaire $commentaire): JsonResponse
     {
-        //
-    }
+        try {
+            $commentaire->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Commentaire $commentaire)
-    {
-        //
-    }
+            return response()->json(null, 204);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::channel('projectLog')->error('Erreur acces base de donnees', [
+                'exception' => $e->getMessage(),
+            ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCommentaireRequest $request, Commentaire $commentaire)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Commentaire $commentaire)
-    {
-        //
+            return $this->errorResponse('Ressource indisponible.', 500);
+        }
     }
 }
