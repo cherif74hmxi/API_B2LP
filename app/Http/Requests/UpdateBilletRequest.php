@@ -8,6 +8,15 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateBilletRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'BIL_DATE' => $this->input('BIL_DATE', $this->input('date')),
+            'BIL_TITRE' => $this->input('BIL_TITRE', $this->input('titre')),
+            'BIL_CONTENU' => $this->input('BIL_CONTENU', $this->input('contenu')),
+        ]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */

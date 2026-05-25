@@ -16,6 +16,7 @@ class BilletsResource extends JsonResource
     {
         //return parent::toArray($request);
         return [
+            'id' => $this->id,
             'Date' => $this->BIL_DATE,
             'Titre' => $this->BIL_TITRE,
             'Contenu' => $this->BIL_CONTENU,

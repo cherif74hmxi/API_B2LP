@@ -6,6 +6,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
+use App\Http\Resources\UserResource;
 use App\Http\Controllers\{UserController,BilletController,CommentaireController};
 use App\Models\User;
 
@@ -64,7 +65,13 @@ Route::post('/login', function(Request $request) {
 				'email' => 'The provided credentials are erroneous.'
 			]);
 		}
-		return $user->createToken('auth_token')->plainTextToken;
+        return response()->json([
+            'data' => [
+                'access_token' => $user->createToken('auth_token')->plainTextToken,
+                'token_type' => 'Bearer',
+                'user' => (new UserResource($user))->resolve(),
+            ],
+        ]);
 	}
 	catch(\Illuminate\Database\QueryException $e) {
 		Log::error('Erreur accès base de données');

@@ -18,7 +18,7 @@ class BilletController extends Controller
         try {
             //Le résultat de la requête est retourné directement en JSON
             //return Billet::all();
-            return response()->json(BilletsResource::collection(Billet::all()));
+            return BilletsResource::collection(Billet::all());
         }
         catch(\Illuminate\Database\QueryException $e) {
             Log::channel('projectLog')->error('Erreur accès base de données');
@@ -43,7 +43,7 @@ class BilletController extends Controller
     {
         $billet = Billet::create($request->validated());
 
-        return response()->json($billet, 201);
+        return (new BilletsResource($billet))->response()->setStatusCode(201);
     }
 
     /**
@@ -54,7 +54,7 @@ class BilletController extends Controller
         //
         try {
             $billetResource = new BilletResource(Billet::with('commentaires','commentaires.user')->findOrFail($id));
-            return response()->json($billetResource);
+            return $billetResource;
         }
         catch(\Illuminate\Database\QueryException $e) {
             Log::error('Erreur accès base de données');
@@ -79,7 +79,7 @@ class BilletController extends Controller
     {
         $billet->update($request->validated());
 
-        return response()->json($billet);
+        return new BilletsResource($billet);
     }
 
     /**
