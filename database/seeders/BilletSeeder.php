@@ -2,20 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Billet;
-use App\Models\Role;
-use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Billet;
 
 class BilletSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        $admin = User::whereHas('role', fn ($query) => $query->where('slug', Role::ADMIN))->first()
-            ?? User::factory()->admin()->create();
-
-        Billet::factory(10)->create([
-            'user_id' => $admin->id,
-        ]);
+        Billet::factory(10)->create();
     }
 }

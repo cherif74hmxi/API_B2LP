@@ -6,38 +6,23 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateBilletRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return (bool) $this->user()?->isAdmin();
+        return false;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
-            'BIL_DATE' => ['sometimes', 'required', 'date'],
-            'BIL_TITRE' => ['sometimes', 'required', 'string', 'max:255'],
-            'BIL_CONTENU' => ['sometimes', 'required', 'string'],
+            //
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $mapped = [];
-
-        if ($this->has('date') && !$this->has('BIL_DATE')) {
-            $mapped['BIL_DATE'] = $this->input('date');
-        }
-
-        if (($this->has('titre') || $this->has('title')) && !$this->has('BIL_TITRE')) {
-            $mapped['BIL_TITRE'] = $this->input('titre', $this->input('title'));
-        }
-
-        if (($this->has('contenu') || $this->has('body')) && !$this->has('BIL_CONTENU')) {
-            $mapped['BIL_CONTENU'] = $this->input('contenu', $this->input('body'));
-        }
-
-        if ($mapped !== []) {
-            $this->merge($mapped);
-        }
     }
 }

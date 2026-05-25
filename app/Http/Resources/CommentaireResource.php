@@ -14,12 +14,10 @@ class CommentaireResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        //return parent::toArray($request);
         return [
-            'id' => $this->getKey(),
-            'Date' => $this->COM_DATE?->toDateString(),
-            'Auteur' => $this->whenLoaded('user', fn () => $this->user?->name),
-            'Utilisateur' => $this->whenLoaded('user', fn () => new UserResource($this->user)),
-            'BilletId' => $this->billet_id,
+            'Date' => $this->COM_DATE,
+            'Auteur' => $this->user->name,
             'Contenu' => $this->COM_CONTENU,
         ];
     }

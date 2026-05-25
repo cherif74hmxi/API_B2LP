@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Billet;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,10 +17,10 @@ class CommentaireFactory extends Factory
     public function definition(): array
     {
         return [
-            'COM_DATE' => now()->toDateString(),
+            'COM_DATE' => now(),
             'COM_CONTENU' => fake()->text(200),
-            'billet_id' => Billet::factory(),
-            'user_id' => User::factory(),
+            'billet_id' => fake()->numberBetween(1,10),
+            'user_id' => fake()->numberBetween(1,2),
         ];
     }
 }

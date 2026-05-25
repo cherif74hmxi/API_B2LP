@@ -2,59 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
-use App\Models\Role;
 use App\Models\User;
-use App\Support\ApiResponse;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
+use App\Http\Resources\UserResource;
+
 
 class UserController extends Controller
 {
-    use ApiResponse;
-
-    public function store(Request $request): JsonResponse
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
-        $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8'],
-        ]);
-
-        try {
-            $role = Role::where('slug', Role::SWIMMER)->first();
-
-            $user = User::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),
-                'role_id' => $role?->id,
-                'is_admin' => false,
-            ]);
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            return $this->successResponse([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'user' => new UserResource($user->load('role')),
-            ], 'Compte cree avec succes.', 201);
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::channel('projectLog')->error('Erreur acces base de donnees', [
-                'exception' => $e->getMessage(),
-            ]);
-
-            return $this->errorResponse('Ressource indisponible.', 500);
-        }
+        //
     }
 
-    public function show(Request $request): JsonResponse
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
-        return $this->successResponse(
-            new UserResource($request->user()->load('role')),
-            'Utilisateur connecte.'
-        );
+        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+      $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+       ]);
+       $token = $user->createToken('auth_token')->plainTextToken;
+       return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
+
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user)
+    {
+        //
+        return new UserResource(auth()->user());
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, User $user)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        //
     }
 }

@@ -2,113 +2,88 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBilletRequest;
-use App\Http\Requests\UpdateBilletRequest;
-use App\Http\Resources\BilletResource;
-use App\Http\Resources\BilletsResource;
-use App\Models\Billet;
-use App\Support\ApiResponse;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\{BilletsResource,BilletResource};
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
+use App\Models\Billet;
 
 class BilletController extends Controller
 {
-    use ApiResponse;
-
-    public function index(): JsonResponse
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
         try {
-            $billets = Billet::with('user.role')
-                ->orderByDesc('BIL_DATE')
-                ->orderByDesc('id')
-                ->get();
+            //Le résultat de la requête est retourné directement en JSON
+            //return Billet::all();
+            return response()->json(BilletsResource::collection(Billet::all()));
+        }
+        catch(\Illuminate\Database\QueryException $e) {
+            Log::channel('projectLog')->error('Erreur accès base de données');
+            return response()->json([
+                'message' => 'Ressource indisponible.'], 500);
+        }
 
-            return $this->successResponse(
-                BilletsResource::collection($billets),
-                'Liste des billets.'
-            );
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::channel('projectLog')->error('Erreur acces base de donnees', [
-                'exception' => $e->getMessage(),
-            ]);
+    }
 
-            return $this->errorResponse('Ressource indisponible.', 500);
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreBilletRequest $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
+        //
+        try {
+            $billetResource = new BilletResource(Billet::with('commentaires','commentaires.user')->findOrFail($id));
+            return response()->json($billetResource);
+        }
+        catch(\Illuminate\Database\QueryException $e) {
+            Log::error('Erreur accès base de données');
+            return response()->json([
+                'message' => 'Ressource indisponible.'], 500);
         }
     }
 
-    public function store(StoreBilletRequest $request): JsonResponse
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Billet $billet)
     {
-        try {
-            $billet = Billet::create([
-                ...$request->validated(),
-                'user_id' => $request->user()->getKey(),
-            ]);
-
-            $billet->load('user.role');
-
-            return $this->successResponse(
-                new BilletResource($billet),
-                'Billet cree avec succes.',
-                201
-            );
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::channel('projectLog')->error('Erreur acces base de donnees', [
-                'exception' => $e->getMessage(),
-            ]);
-
-            return $this->errorResponse('Ressource indisponible.', 500);
-        }
+        //
     }
 
-    public function show(Billet $billet): JsonResponse
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateBilletRequest $request, Billet $billet)
     {
-        try {
-            $billet->load(['user.role', 'commentaires.user.role']);
-
-            return $this->successResponse(
-                new BilletResource($billet),
-                'Detail du billet.'
-            );
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::channel('projectLog')->error('Erreur acces base de donnees', [
-                'exception' => $e->getMessage(),
-            ]);
-
-            return $this->errorResponse('Ressource indisponible.', 500);
-        }
+        //
     }
 
-    public function update(UpdateBilletRequest $request, Billet $billet): JsonResponse
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Billet $billet)
     {
-        try {
-            $billet->update($request->validated());
-            $billet->load(['user.role', 'commentaires.user.role']);
-
-            return $this->successResponse(
-                new BilletResource($billet),
-                'Billet modifie avec succes.'
-            );
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::channel('projectLog')->error('Erreur acces base de donnees', [
-                'exception' => $e->getMessage(),
-            ]);
-
-            return $this->errorResponse('Ressource indisponible.', 500);
-        }
-    }
-
-    public function destroy(Billet $billet): JsonResponse
-    {
-        try {
-            $billet->delete();
-
-            return response()->json(null, 204);
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::channel('projectLog')->error('Erreur acces base de donnees', [
-                'exception' => $e->getMessage(),
-            ]);
-
-            return $this->errorResponse('Ressource indisponible.', 500);
-        }
+        //
     }
 }

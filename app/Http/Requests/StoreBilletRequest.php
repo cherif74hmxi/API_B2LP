@@ -6,26 +6,23 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBilletRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return (bool) $this->user()?->isAdmin();
+        return false;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
-            'BIL_DATE' => ['required', 'date'],
-            'BIL_TITRE' => ['required', 'string', 'max:255'],
-            'BIL_CONTENU' => ['required', 'string'],
+            //
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'BIL_DATE' => $this->input('BIL_DATE', $this->input('date', now()->toDateString())),
-            'BIL_TITRE' => $this->input('BIL_TITRE', $this->input('titre', $this->input('title'))),
-            'BIL_CONTENU' => $this->input('BIL_CONTENU', $this->input('contenu', $this->input('body'))),
-        ]);
     }
 }

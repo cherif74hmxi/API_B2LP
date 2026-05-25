@@ -1,16 +1,11 @@
 <?php
 
-use App\Http\Middleware\EnsureUserIsAdmin;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,65 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(prepend: [
-            \Illuminate\Http\Middleware\HandleCors::class,
-        ]);
-
-        $middleware->alias([
-            'admin' => EnsureUserIsAdmin::class,
-        ]);
+        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $isApiRequest = fn (Request $request): bool => $request->is('api/*') || $request->expectsJson();
-
-        $exceptions->render(function (AuthenticationException $e, Request $request) use ($isApiRequest) {
-            if (!$isApiRequest($request)) {
-                return null;
-            }
-
+        //
+        $exceptions->renderable(function(NotFoundHttpException $e){
+            Log::channel('projectLog')->error('Erreur : ressource non trouvée.');
             return response()->json([
-                'success' => false,
-                'message' => 'Authentification requise.',
-                'data' => null,
-            ], 401);
-        });
-
-        $exceptions->render(function (AuthorizationException $e, Request $request) use ($isApiRequest) {
-            if (!$isApiRequest($request)) {
-                return null;
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage() ?: 'Action interdite.',
-                'data' => null,
-            ], 403);
-        });
-
-        $exceptions->render(function (ValidationException $e, Request $request) use ($isApiRequest) {
-            if (!$isApiRequest($request)) {
-                return null;
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Donnees invalides.',
-                'data' => null,
-                'errors' => $e->errors(),
-            ], 422);
-        });
-
-        $exceptions->render(function (ModelNotFoundException|NotFoundHttpException $e, Request $request) use ($isApiRequest) {
-            if (!$isApiRequest($request)) {
-                return null;
-            }
-
-            Log::channel('projectLog')->error('Erreur : ressource non trouvee.');
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Ressource non trouvee.',
-                'data' => null,
-            ], 404);
+                'message' => 'Ressource non trouvée.'
+            ],404);
         });
     })->create();
