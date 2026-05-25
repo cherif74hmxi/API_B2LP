@@ -26,6 +26,8 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ])->save();
 
-        User::factory(5)->create();
+        if (app()->environment('local') && class_exists(\Faker\Factory::class)) {
+            User::factory(5)->create();
+        }
     }
 }
