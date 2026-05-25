@@ -4,7 +4,7 @@
 
 Code du webservice développé avec Laravel. Ce webservice sera interrogé par l'application client leger "**b2LP**" développée avec ReactNative.
 
-Mise à jour  _Mars 2025_.
+Mise à jour  _Mai 2026_.
 
 ### 1. Programmation.
 
@@ -24,18 +24,32 @@ Mise à jour  _Mars 2025_.
     * faire `Artisan: key generation`,
     * faire `Artisan: migrate install`,
     * faire `Artisan: migrate`.
-- Pour peupler la db :
-    * créer des users avec l'api : voir endpoint ci-dessous,
-    * faire `php artisan db:seed --class=BilletSeeder`,
-    * faire `php artisan db:seed --class=UserSeeder`,
-    * faire `php artisan db:seed --class=CommentaireSeeder`.
+- Pour créer les tables et peupler la db en local :
+    * faire `php artisan migrate:fresh --seed`.
 
 - _Pour la mise en production_ :
     * créer un user dans la DB avec des droits CRUD uniquement,
     * [suivre les instructions de laravel.](https://laravel.com/docs/11.x/deployment)
+
+### 3. Déploiement sur le VPS.
+
+Depuis le VPS, se placer dans le dossier du projet puis récupérer la dernière version :
+
+```bash
+cd /chemin/du/projet
+git pull origin main
+composer install --no-dev --optimize-autoloader
+php artisan migrate:fresh --seed --force
+php artisan config:cache
+php artisan route:cache
+```
+
+`migrate:fresh --seed` supprime les tables existantes, les recrée, puis relance les seeders. Cette commande est adaptée tant que la base du VPS ne contient pas encore de vraies données à conserver.
+
+Si la base contient déjà des données importantes, utiliser plutôt une migration dédiée et ne pas lancer `migrate:fresh`.
     
 
-### 3. API Endpoints.
+### 4. API Endpoints.
 
 #### Authentification
 
@@ -134,8 +148,25 @@ _Pas d'authentification requise_.
 
 #### Application Blog : administration des billets et commentaires.
 
-Ces endpoints nécessitent une authentification par Bearer Token avec Sanctum.
-Ils sont réservés aux utilisateurs dont le rôle est `admin`.
+Les fonctionnalités d'administration permettent de créer, modifier et supprimer des billets, ainsi que de supprimer des commentaires.
+
+Elles nécessitent une authentification par Bearer Token avec Sanctum. Elles sont réservées aux utilisateurs dont la colonne `role` dans la table `users` vaut `admin`.
+
+Les utilisateurs classiques ont le rôle `adherent`.
+
+Le seeder `UserSeeder` crée un compte administrateur par défaut :
+
+```txt
+Nom : Cherif
+Email : cherif@lyonpalm.fr
+Rôle : admin
+```
+
+Après connexion via `POST /api/login`, le token retourné doit être envoyé dans les requêtes protégées :
+
+```http
+Authorization: Bearer {token}
+```
 
 | **Nom** | **Méthode** | **Url** | **Response Code** |
 | ------- | ----------- | ------- | ----------------- |
@@ -189,3 +220,5 @@ Ils sont réservés aux utilisateurs dont le rôle est `admin`.
     - `{commentaire}` : id du commentaire à supprimer.
 - Data Send
     - `None`.
+
+Si l'utilisateur connecté n'a pas le rôle `admin`, l'API retourne une erreur `403`.
